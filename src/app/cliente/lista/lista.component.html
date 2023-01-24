@@ -1,0 +1,49 @@
+<div class="container main-container">
+<ngx-spinner bdColor = "rgba(0,0,0,0.8)" size = "medium" color = "#fff" type = "timer" [fullScreen] = "true">
+  <p style="color: white" > carregando...</p>
+</ngx-spinner>
+  <h1>Lista de Cientes</h1>
+
+  <p>
+      <a class="btn btn-info" [routerLink]="['/clientes/adicionar-novo']">Novo Cliente</a>
+  </p>
+
+  <table class="table table-hover">
+      <thead class="thead-dark">
+          <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>CPF</th>
+              <th>Telefone</th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cliente of clientes">
+          <td>
+              {{ cliente.nome }}
+          </td>
+          <td>
+              {{cliente.email?.endereco }}
+          </td>
+          <td>
+            {{cliente.cpf?.numero | cpf }}
+        </td>
+        <td>
+          {{cliente?.telefone | telefone}}
+      </td>
+          <td class="text-right">
+              <a class="btn btn-info" [routerLink]="['/clientes/detalhes',cliente.id]">
+                  <span class="fa fa-search"></span>
+              </a>&nbsp;
+              <a class="btn btn-warning" [routerLink]="['/clientes/editar',cliente.id]">
+                  <span class="fa fa-pencil-alt"></span>
+              </a>&nbsp;
+              <a class="btn btn-danger" [routerLink]="['/clientes/excluir',cliente.id]">
+                  <span class="fa fa-trash"></span>
+              </a>
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

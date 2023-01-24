@@ -1,0 +1,29 @@
+<div class="container main-container">
+  <ngx-spinner bdColor = "rgba(0,0,0,0.8)" size = "medium" color = "#fff" type = "timer" [fullScreen] = "true">
+    <p style="color: white" > carregando...</p>
+  </ngx-spinner>
+    <h3>Tem certeza que deseja excluir o cliente {{ cliente.nome }} ?</h3>
+    <hr />
+
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">
+            <label class="control-label">Nome</label>
+        </dt>
+            <dd class="col-sm-10">
+                {{ cliente.nome }}
+            </dd>
+            <dt class="col-sm-2">
+                <label class="control-label">CPF</label>
+        </dt>
+            <dd class="col-sm-10">
+                {{ cliente.cpf?.numero | cpf}}
+            </dd>
+        </dl>
+    </div>
+
+    <div>
+        <a class="btn btn-danger" href="javascript:void(0)" (click)="excluirEvento()">Excluir</a>&nbsp;
+        <a class="btn btn-info" [routerLink]="['/clientes/listar-todos']">Voltar</a>
+    </div>
+</div>

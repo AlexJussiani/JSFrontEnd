@@ -1,0 +1,73 @@
+<div class="container main-container">
+  <ngx-spinner bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="timer" [fullScreen]="true">
+    <p style="color: white"> carregando...</p>
+  </ngx-spinner>
+  <h1>Editar Cliente</h1>
+  <hr>
+  <form novalidate="novalidate" (ngSubmit)="editarCliente()" [formGroup]="produtoForm">
+    <div class="alert alert-danger" *ngIf="errors.length > 0">
+      <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+      <ul>
+        <li *ngFor="let error of errors">{{ error }}</li>
+      </ul>
+    </div>
+
+    <input type="hidden" id="id" name="id" value="">
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+
+        <div>
+          <label class="control-label">Nome</label>
+          <div>
+            <input class="form-control" id="nome" type="text" placeholder="Nome (requerido)" formControlName="nome"
+              [ngClass]="{'is-invalid': displayMessage.nome }" />
+            <span class="text-danger" *ngIf="displayMessage.nome">
+              <p [innerHTML]="displayMessage.nome"></p>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label class="control-label">Descrição</label>
+          <div>
+            <textarea cols="40" rows="5" maxlength="1000" class="form-control" id="descricao"
+              placeholder="Descrição (requerido)" formControlName="descricao"
+              [ngClass]="{'is-invalid': displayMessage.descricao }"></textarea>
+            <span class="text-danger" *ngIf="displayMessage.descricao">
+              <p [innerHTML]="displayMessage.descricao"></p>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">Valor</label>
+          <div>
+            <input class="form-control" id="valor" type="text" placeholder="Valor (requerido)" formControlName="valor"
+              [ngClass]="{'is-invalid': displayMessage.valor }" />
+            <span class="text-danger" *ngIf="displayMessage.valor">
+              <p [innerHTML]="displayMessage.valor"></p>
+            </span>
+          </div>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" id="entrada" formControlName="entrada" name="entrada"
+              value="true" />
+            Entrada
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" id="saida" formControlName="saida" name="saida"
+              value="true" />
+            Saída
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="submit" value="Editar" class="btn btn-primary">&nbsp;
+      <a class="btn btn-info" [routerLink]="['/produtos/listar-todos']">Voltar</a>
+  </div>
+
+  </form>

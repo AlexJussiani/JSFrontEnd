@@ -1,0 +1,154 @@
+<div class="container main-container">
+  <ngx-spinner bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="timer" [fullScreen]="true">
+    <p style="color: white"> carregando...</p>
+  </ngx-spinner>
+  <h1>Editar Conta</h1>
+  <hr>
+  <form novalidate="novalidate" (ngSubmit)="editarConta()" [formGroup]="contaForm">
+
+    <div class="alert alert-danger" *ngIf="errors.length > 0">
+      <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+      <ul>
+        <li *ngFor="let error of errors">{{ error }}</li>
+      </ul>
+    </div>
+
+    <input type="hidden" id="id" name="id" value="">
+    <input type="hidden" id="enderecoId" name="enderecoId" value="">
+
+    <div class="form-row">
+
+      <div class="form-group col-md-6">
+
+        <div>
+          <label class="control-label">Codigo</label>
+          <div>
+            <dd class="col-sm-10 form-control text-danger">
+              {{ conta.codigo }}
+            </dd>
+          </div>
+        </div>
+
+        <div>
+          <label class="control-label">Cliente</label>
+          <div>
+            <dd class="col-sm-10 form-control text-danger">
+              {{ conta.nome }}
+            </dd>
+          </div>
+        </div>
+        <div>
+          <label class="control-label">Data Compra</label>
+          <div>
+            <input class="form-control" id="dataCompra" type="datetime-local" placeholder="data Compra"
+              formControlName="dataCompra" [ngClass]="{'is-invalid': displayMessage.dataCompra }" />
+            <span class="text-danger" *ngIf="displayMessage.dataCompra">
+              <p [innerHTML]="displayMessage.dataCompra"></p>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label class="control-label">Data Vencimento</label>
+          <div>
+            <input class="form-control" id="dataVencimento" type="datetime-local" placeholder="data Vencimento"
+              formControlName="dataVencimento" [ngClass]="{'is-invalid': displayMessage.dataVencimento }" />
+            <span class="text-danger" *ngIf="displayMessage.dataVencimento">
+              <p [innerHTML]="displayMessage.dataVencimento"></p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br />
+    <div class="col-12 row row-cols-sm-auto">
+      <a class="btn btn-info" href="javascript:void(0)" (click)="abrirModal(content)">
+        <span title="Adicionar Item" class="fa fa-plus"></span>
+      </a>
+    </div>
+
+    <div>
+      <div style="padding-top: 20px">
+        <div>
+          <hr />
+          <h4>Itens</h4>
+        </div>
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Produto</th>
+              <th>Quantidade</th>
+              <th>Valor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hidden" formArrayName="contaItems" *ngFor="let item of getItensControls(); let i = index">
+              <td [formGroupName]="i">
+                <input readonly="readonly" class="form-control text-center" id="produtoNome"
+                  formControlName="produtoNome" type="text" />
+              </td>
+              <td [formGroupName]="i">
+                <input (change)="sumValorTotal()" class="form-control text-center" formControlName="quantidade"
+                  type="number" />
+              </td>
+              <td [formGroupName]="i">
+                <input readonly="readonly" class="form-control text-center" formControlName="valorUnitario"
+                  type="text" />
+              </td>
+              <td [formGroupName]="i" data-name="del">
+                <button (click)="RemoverItemLista($event, item)" type="button" name="del0"
+                  class="btn btn-danger glyphicon glyphicon-remove row-remove">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="text-right col-md-11">Valor total: {{valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}</p>
+    <div class="form-group">
+      <input type="submit" value="Atualizar" class="btn btn-primary" />&nbsp;
+      <a class="btn btn-info" [routerLink]="['/financeiro/receber/listar-todos']">Voltar</a>
+    </div>
+  </form>
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <form [formGroup]="produtosForm" (ngSubmit)="onSubmit()">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Produtos</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th><input type="checkbox" /></th>
+            <th>Nome</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr formArrayName="produtos" *ngFor="let item of getProdutosControls(); let i = index">
+            <th>
+              <input type="checkbox" class="checkbox" [formControlName]="i" />
+            </th>
+            <td class="col col-lg-9">
+              {{ produtos[i].nome }}
+            </td>
+            <td class="col col-lg-9">
+              {{
+              produtos[i].valor | currency: "BRL":"symbol":"1.2-2":"pt"
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-footer">
+        <input type="submit" value="Adicionar" class="btn btn-primary" />
+      </div>
+    </form>
+  </ng-template>
+</div>

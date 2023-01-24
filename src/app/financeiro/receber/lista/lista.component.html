@@ -1,0 +1,120 @@
+<div class="container main-container">
+  <ngx-spinner bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="timer" [fullScreen]="true">
+    <p style="color: white">carregando...</p>
+  </ngx-spinner>
+  <h1>Lista de Contas a Receber</h1>
+  <div class="row">
+    <div class="col">
+      <p>
+        <a class="btn btn-info" [routerLink]="['/financeiro/receber/novo']">Nova Conta</a>
+      </p>
+    </div>
+    <div>
+      <select class="form-control" id="status" type="text" name="status" [(ngModel)]="statusSelecionado.id"
+        (change)="onTipoId($event.target)">
+        <option *ngFor="let status of statusContas" value="{{ status.id }}">
+          {{ status.nome }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <form class="row row-cols-sm-auto">
+        <div class="col-12">
+          <div class="dp-hidden position-absolute">
+            <div class="input-group">
+              <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+                outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" />
+              <ng-template #t let-date let-focused="focused">
+                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                  [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                  (mouseleave)="hoveredDate = null">
+                  {{ date.day }}
+                </span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="input-group">
+            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+              [value]="formatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)" />
+            <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()"
+              type="button"></button>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="input-group">
+            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+              [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" />
+            <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()"
+              type="button"></button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th></th>
+          <th>Codigo</th>
+          <th>Cliente</th>
+          <th>Data Compra</th>
+          <th>Data Vencimento</th>
+          <th>Status</th>
+          <th>Valor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conta of contas | slice: (page-1) * pageSize : page * pageSize">
+          <td>
+            <div *ngIf="conta.statusConta == '2'">
+              <i class="fa fa-solid fa-check  fa-2x" title="Recebidas" style="color: green;"></i>
+            </div>
+            <div *ngIf="conta.statusConta == '1'">
+              <i class="fa fa-solid fa-plus fa-2x" title="Registrar recebimento" style="color: green;"
+                (click)="onRegistrarRecebimento(conta)"></i>
+            </div>
+          </td>
+          <td>
+            {{ conta.codigo }}
+          </td>
+          <td>
+            {{ conta.nome == "" ? "Não Informado" : conta.nome }}
+          </td>
+          <td>
+            {{ conta.dataCompra | date: "dd/MM/yyyy" }}
+          </td>
+          <td>
+            {{ conta.dataVencimento | date: "dd/MM/yyyy" }}
+          </td>
+          <td>
+            {{ conta?.statusConta == "1" ? "A Receber" : "Recebida" }}
+          </td>
+          <td>
+            {{ conta.valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}
+          </td>
+          <td class="text-right">
+            <a class="btn btn-info" [routerLink]="['/financeiro/receber/detalhe', conta.id]">
+              <span class="fa fa-search"></span> </a>&nbsp;
+            <a class="btn btn-warning" [routerLink]="['/financeiro/receber/editar', conta.id]">
+              <span class="fa fa-pencil-alt"></span> </a>&nbsp;
+            <a class="btn btn-danger" [routerLink]="['/financeiro/receber/excluir', conta.id]">
+              <span class="fa fa-trash"></span>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <ngb-pagination class="d-flex justify-content-center" [collectionSize]="contas.length" [(page)]="page"
+        [maxSize]="5">
+        [rotate]="true"
+        [ellipses]="false"
+        [boundaryLinks]="true"
+      </ngb-pagination>
+      <div style="text-align: right;">
+        Valor Total: {{valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}
+      </div>
+    </div>
+  </div>

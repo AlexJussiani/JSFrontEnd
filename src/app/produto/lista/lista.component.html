@@ -1,0 +1,57 @@
+<div class="container main-container">
+  <ngx-spinner bdColor = "rgba(0,0,0,0.8)" size = "medium" color = "#fff" type = "timer" [fullScreen] = "true">
+    <p style="color: white" > carregando...</p>
+  </ngx-spinner>
+  <h1>Lista de Produtos</h1>
+  <hr />
+
+  <p>
+    <a class="btn btn-info" [routerLink]="['/produtos/adicionar-novo']"
+      >Novo Produto</a
+    >
+  </p>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Nome</th>
+        <th>Ingredientes</th>
+        <th>Valor</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let produto of produtos">
+        <td class="col col-lg-2" style="font-weight: bold">
+          {{ produto.nome }}
+        </td>
+        <td class="col col-lg-6">
+          {{ produto.descricao }}
+        </td>
+        <td class="col col-lg-1">
+          {{ produto.valor | currency: "BRL":"symbol":"1.2-2":"pt" }}
+        </td>
+        <td class="text-right col col-lg-2">
+          <a
+            class="btn btn-info"
+            [routerLink]="['/produto/detalhes', produto.id]"
+          >
+            <span class="fa fa-search"></span> </a
+          >&nbsp;
+          <a
+            class="btn btn-warning"
+            [routerLink]="['/produtos/editar', produto.id]"
+          >
+            <span class="fa fa-pencil-alt"></span> </a
+          >&nbsp;
+          <a
+            class="btn btn-danger"
+            [routerLink]="['/produto/excluir', produto.id]"
+          >
+            <span class="fa fa-trash"></span>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

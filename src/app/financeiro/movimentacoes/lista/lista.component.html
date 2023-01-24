@@ -1,0 +1,45 @@
+<div class="container main-container">
+  <ngx-spinner
+    bdColor="rgba(0,0,0,0.8)"
+    size="medium"
+    color="#fff"
+    type="timer"
+    [fullScreen]="true"
+  >
+    <p style="color: white">carregando...</p>
+  </ngx-spinner>
+  <h1>Lista de Movimentações</h1>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Codigo Conta</th>
+        <th>Tipo</th>
+        <th>Data Pagamento</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let movimentacao of movimentacoes">
+      <td>
+        {{ movimentacao.codigo }}
+      </td>
+      <td>
+        {{ movimentacao?.tipoConta == "1" ? "Debido" : "Credito" }}
+      </td>
+      <td>
+        {{ movimentacao.dataPagamento | date: "dd/MM/yyyy" }}
+      </td>
+      <td *ngIf="movimentacao.tipoConta == '1'" style="color: red;">
+        {{ movimentacao.valor | currency: "BRL":"symbol":"1.2-2":"pt" }}
+      </td>
+      <td *ngIf="movimentacao.tipoConta == '2'" style="color: green;">
+        {{ movimentacao.valor | currency: "BRL":"symbol":"1.2-2":"pt" }}
+      </td>
+    </tr>
+  </tbody>
+  </table>
+  <div style="text-align: right;">
+    Total Debitado: {{valorDebitado | currency: "BRL":"symbol":"1.2-2":"pt" }} / Total Creditado: {{valorCreditado | currency: "BRL":"symbol":"1.2-2":"pt" }} / Saldo: {{valorSaldo | currency: "BRL":"symbol":"1.2-2":"pt" }}
+  </div>
+</div>

@@ -1,0 +1,151 @@
+<div class="container main-container">
+  <h1>Nova Conta</h1>
+
+  <hr />
+  <div class="row">
+    <div class="col-md-10">
+      <form novalidate="novalidate" (ngSubmit)="adicionarConta()" [formGroup]="clienteForm">
+        <div class="alert alert-danger" *ngIf="errors.length > 0">
+          <h3 id="msgRetorno">Opa! Alguma coisa não deu certo:</h3>
+          <ul>
+            <li *ngFor="let error of errors">{{ error }}</li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Cliente</label>
+          <select class="form-control" id="clienteId" formControlName="clienteId"
+            [ngClass]="{ 'is-invalid': displayMessage.clienteId }">
+            <option *ngFor="let cliente of clientes" value="{{ cliente.id }}">
+              {{ cliente.nome }}
+            </option>
+          </select>
+          <span class="text-danger" *ngIf="displayMessage.clienteId">
+            <p [innerHTML]="displayMessage.clienteId"></p>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Data Compra</label>
+
+          <div class="col-12 row row-cols-sm-auto">
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="dataCompra" name="dp"
+                [(ngModel)]="datacompra1" ngbDatepicker #dCompra="ngbDatepicker" />
+              <button class="btn btn-outline-secondary calendar fa fa-calendar" (click)="dCompra.toggle()"
+                type="button"></button>
+              <span class="text-danger" *ngIf="displayMessage.datacompra">
+                <p [innerHTML]="displayMessage.datacompra"></p>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Data Vencimento</label>
+
+          <div class="col-12 row row-cols-sm-auto">
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="dataVencimento" name="dp"
+                [(ngModel)]="datavencimento1" ngbDatepicker #dVencimento="ngbDatepicker" />
+              <button class="btn btn-outline-secondary calendar fa fa-calendar" (click)="dVencimento.toggle()"
+                type="button"></button>
+              <span class="text-danger" *ngIf="displayMessage.datavencimento">
+                <p [innerHTML]="displayMessage.datavencimento"></p>
+              </span>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="col-12 row row-cols-sm-auto">
+          <a class="btn btn-info" href="javascript:void(0)" (click)="abrirModal(content)">
+            <span title="Adicionar Item" class="fa fa-plus"></span>
+          </a>
+        </div>
+
+        <div>
+          <div style="padding-top: 20px">
+            <div>
+              <hr />
+              <h4>Itens</h4>
+            </div>
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th class="text-center">Lanche</th>
+                  <th class="text-center">Quantidade</th>
+                  <th class="text-center">Valor</th>
+                  <th class="text-center"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hidden" formArrayName="contaItems" *ngFor="let item of getItensControls(); let i = index">
+                  <td [formGroupName]="i">
+                    <input readonly="readonly" class="form-control text-center" id="produtoNome"
+                      formControlName="produtoNome" type="text" />
+                  </td>
+                  <td [formGroupName]="i">
+                    <input (change)="sumValorTotal()" class="form-control text-center" formControlName="quantidade"
+                      type="number" />
+                  </td>
+                  <td [formGroupName]="i">
+                    <input readonly="readonly" class="form-control text-center" formControlName="valorUnitario"
+                      type="text" />
+                  </td>
+                  <td [formGroupName]="i" data-name="del">
+                    <button (click)="RemoverItemLista($event, item)" type="button" name="del0"
+                      class="btn btn-danger glyphicon glyphicon-remove row-remove">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="text-right col-md-11">Valor total: {{valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}</p>
+        <div class="form-group">
+          <input type="submit" value="Cadastrar" class="btn btn-primary" />&nbsp;
+          <a class="btn btn-info" [routerLink]="['/financeiro/receber/listar-todos']">Voltar</a>
+        </div>
+      </form>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <form [formGroup]="produtosForm" (ngSubmit)="onSubmit()">
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Produtos</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>Nome</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr formArrayName="produtos" *ngFor="let item of getProdutosControls(); let i = index">
+                <th>
+                  <input type="checkbox" class="checkbox" [formControlName]="i" />
+                </th>
+                <td class="col col-lg-9">
+                  {{ produtos[i].nome }}
+                </td>
+                <td class="col col-lg-9">
+                  {{
+                  produtos[i].valor | currency: "BRL":"symbol":"1.2-2":"pt"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="modal-footer">
+            <input type="submit" value="Adicionar" class="btn btn-primary" />
+          </div>
+        </form>
+      </ng-template>
+    </div>
+  </div>
+</div>

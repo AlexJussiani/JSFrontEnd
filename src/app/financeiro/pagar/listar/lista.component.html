@@ -1,0 +1,94 @@
+<div class="container main-container">
+  <ngx-spinner
+    bdColor="rgba(0,0,0,0.8)"
+    size="medium"
+    color="#fff"
+    type="timer"
+    [fullScreen]="true"
+  >
+    <p style="color: white">carregando...</p>
+  </ngx-spinner>
+  <h1>Lista de Contas a Pagar</h1>
+  <div class="row">
+    <div class="col">
+      <p>
+        <a class="btn btn-info" [routerLink]="['/financeiro/pagar/novo']"
+          >Nova Conta</a
+        >
+      </p>
+    </div>
+    <div>
+      <select
+        class="form-control"
+        id="status"
+        type="text"
+        name="status"
+        [(ngModel)]="statusSelecionado.id"
+        (change)="onTipoId($event.target)"
+      >
+        <option *ngFor="let status of statusContas" value="{{ status.id }}">
+          {{ status.nome }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th></th>
+        <th>Codigo</th>
+        <th>Cliente</th>
+        <th>Data Compra</th>
+        <th>Data Vencimento</th>
+        <th>Status</th>
+        <th>Valor</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let conta of contas">
+      <td >
+        <div *ngIf="conta.statusConta == '2'">
+          <i class="fa fa-solid fa-check  fa-2x" title="Recebidas" style="color: green;"></i>
+        </div>
+        <div *ngIf="conta.statusConta == '1'">
+          <i class="fa fa-solid fa-plus fa-2x" title="Registrar recebimento" style="color: green;" (click)="onRegistrarPagamento(conta)"></i>
+        </div>
+      </td>
+      <td>
+        {{ conta.codigo }}
+      </td>
+      <td>
+        {{ conta.nome == "" ? "Não Informado" : conta.nome }}
+      </td>
+      <td>
+        {{ conta.dataCompra | date: "dd/MM/yyyy" }}
+      </td>
+      <td>
+        {{ conta.dataVencimento | date: "dd/MM/yyyy" }}
+      </td>
+      <td>
+        {{ conta?.statusConta == "1" ? "A Receber" : "Recebida" }}
+      </td>
+      <td>
+        {{ conta.valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}
+      </td>
+      <td class="text-right">
+        <a class="btn btn-info" [routerLink]="['/financeiro/pagar/detalhe', conta.id]">
+          <span class="fa fa-search"></span> </a
+        >&nbsp;
+        <a class="btn btn-warning" [routerLink]="['/financeiro/pagar/editar', conta.id]">
+          <span class="fa fa-pencil-alt"></span> </a
+        >&nbsp;
+        <a class="btn btn-danger" [routerLink]="['/financeiro/pagar/excluir', conta.id]">
+          <span class="fa fa-trash"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+  </table>
+  <div style="text-align: right;">
+    Valor Total: {{valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}
+  </div>
+</div>

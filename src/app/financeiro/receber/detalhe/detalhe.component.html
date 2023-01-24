@@ -1,0 +1,75 @@
+<div class="container main-container">
+  <h1>Detalhes do {{ conta.codigo }}</h1>
+
+  <div>
+    <h4>Informação somente leitura</h4>
+    <hr />
+    <dl class="row">
+      <dt class="col-sm-2">
+        <label class="control-label">Codigo:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta.codigo }}
+      </dd>
+      <dt class="col-sm-2">
+        <label class="control-label">Cliente:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta.nome }}
+      </dd>
+      <dt class="col-sm-2">
+        <label class="control-label">Data Compra:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta.dataCadastro | date: "dd/MM/yyyy" }}
+      </dd>
+      <dt class="col-sm-2">
+        <label class="control-label">Data Vencimento:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta.dataVencimento | date: "dd/MM/yyyy" }}
+      </dd>
+      <dt class="col-sm-2">
+        <label class="control-label">Valor Total:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta.valorTotal | currency: "BRL":"symbol":"1.2-2":"pt" }}
+      </dd>
+      <dt class="col-sm-2">
+        <label class="control-label">Status:</label>
+      </dt>
+      <dd class="col-sm-10">
+        {{ conta?.statusConta == "1" ? "A Receber" : "Recebida" }}
+      </dd>
+    </dl>
+  </div>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Valor</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of conta.contaItems">
+      <td class="col-sm-10">
+        {{ item.produtoNome }}
+      </td>
+      <td class="col-sm-10">
+        {{ item.quantidade }}
+      </td>
+      <td class="col-sm-10">
+        {{ item.valorUnitario }}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <a class="btn btn-dark" [routerLink]="['/contas/editar',conta.id]">Editar</a>&nbsp;
+    <a class="btn btn-info" [routerLink]="['/financeiro/receber/listar-todos']">Voltar</a>
+  </div>
+</div>
